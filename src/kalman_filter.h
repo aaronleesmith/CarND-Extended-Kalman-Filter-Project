@@ -1,6 +1,6 @@
 #ifndef KALMAN_FILTER_H_
 #define KALMAN_FILTER_H_
-#include "Eigen/Dense"
+#include "Eigen"
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -26,6 +26,9 @@ public:
   // measurement covariance matrix
   MatrixXd R_;
 
+  // identity matrix which is the appropriate size for this problem.
+  MatrixXd I_;
+
   /**
    * Constructor
    */
@@ -46,7 +49,7 @@ public:
    * @param Q_in Process covariance matrix
    */
   void Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
-      MatrixXd &H_in, MatrixXd &R_in, MatrixXd &Q_in);
+      MatrixXd &H_in, MatrixXd &R_in, MatrixXd &Q_in, MatrixXd &I_in);
 
   /**
    * Prediction Predicts the state and the state covariance
@@ -59,15 +62,7 @@ public:
    * Updates the state by using standard Kalman Filter equations
    * @param z The measurement at k+1
    */
-  void Update(const VectorXd &z);
-
-  /**
-   * Updates the state by using Extended Kalman Filter equations
-   * @param z The measurement at k+1
-   */
-  void UpdateEKF(const VectorXd &z);
-
-
+  void Update(const VectorXd &measurement_error);
 };
 
 #endif /* KALMAN_FILTER_H_ */

@@ -1,7 +1,8 @@
 #ifndef TOOLS_H_
 #define TOOLS_H_
+#include "Eigen"
 #include <vector>
-#include "Eigen/Dense"
+#include <cmath>
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;

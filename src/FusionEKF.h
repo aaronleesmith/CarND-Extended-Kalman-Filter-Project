@@ -7,6 +7,8 @@
 #include <fstream>
 #include "kalman_filter.h"
 #include "tools.h"
+#include <cmath>
+
 
 class FusionEKF {
 public:
@@ -19,6 +21,12 @@ public:
   * Destructor.
   */
   virtual ~FusionEKF();
+
+  /**
+   * Handle initial value and initialization. Only called once.
+   * @param measurement_pack
+   */
+  void Init(const MeasurementPackage &measurement_pack);
 
   /**
   * Run the whole flow of the Kalman Filter from here.
@@ -35,7 +43,7 @@ private:
   bool is_initialized_;
 
   // previous timestamp
-  long previous_timestamp_;
+  long long previous_timestamp_;
 
   // tool object used to compute Jacobian and RMSE
   Tools tools;
@@ -43,6 +51,16 @@ private:
   MatrixXd R_radar_;
   MatrixXd H_laser_;
   MatrixXd Hj_;
+
+  double noise_ax_;
+  double noise_ay_;
+
+  double CalculateDt(double new_timestamp);
+  void UpdateProcessCovarianceMatrix(double dt);
+  void UpdateStateTransitionMatrix(double dt);
+  VectorXd CalculateLaserMeasurement();
+  VectorXd CalculateRadarMeasurement();
+  double NormalizedAtan(double px, double py);
 };
 
 #endif /* FusionEKF_H_ */
