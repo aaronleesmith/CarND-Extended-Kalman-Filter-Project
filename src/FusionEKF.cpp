@@ -51,8 +51,8 @@ FusionEKF::FusionEKF() {
   H_laser_ << 1, 0, 0, 0,
               0, 1, 0, 0;
 
-  noise_ax_ = 10;
-  noise_ay_ = 10;
+  noise_ax_ = 9;
+  noise_ay_ = 9;
 
   ekf_.P_ <<  1, 0, 0,    0,
               0, 1, 0,    0,
@@ -170,7 +170,7 @@ double FusionEKF::CalculateDt(double new_timestamp) {
 void FusionEKF::UpdateProcessCovarianceMatrix(double dt) {
   double dt_4 = pow(dt, 4);
   double dt_3 = pow(dt, 3);
-  double dt_2 = pow(dt, 1);
+  double dt_2 = pow(dt, 2);
 
   ekf_.Q_ << dt_4 / 4 * noise_ax_, 0,                      dt_3 / 2 *noise_ax_,       0,
              0,                    dt_4 / 4 * noise_ay_,   0,                         dt_3 / 2 *noise_ay_,
