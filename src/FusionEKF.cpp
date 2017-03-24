@@ -44,18 +44,18 @@ FusionEKF::FusionEKF() {
   R_laser_ << 0.0225, 0,
               0,      0.0225;
 
-  R_radar_ << 0.0225  ,0,     0,
-              0,      0.0225, 0,
-              0,      0,      0.0225;
+  R_radar_ << 0.09, 0, 0,
+    0, 0.0009, 0,
+    0, 0, 0.09;
 
   H_laser_ << 1, 0, 0, 0,
               0, 1, 0, 0;
 
   noise_ax_ = 9;
-  noise_ay_ = 1;
+  noise_ay_ = 9;
 
-  ekf_.P_ <<  .5, 0, 0,    0,
-              0, .5, 0,    0,
+  ekf_.P_ <<  1, 0, 0,    0,
+              0, 1, 0,    0,
               0, 0, 1000, 0,
               0, 0, 0,    1000;
 }
@@ -119,7 +119,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   previous_timestamp_ = measurement_pack.timestamp_;
   bool simultaneous_measurement = false;
 
-  if (dt < 0.001) {
+  if (dt < 0.0001) {
     simultaneous_measurement = true;
   }
 
