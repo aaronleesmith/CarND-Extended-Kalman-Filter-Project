@@ -42,7 +42,7 @@ FusionEKF::FusionEKF() {
              0, 0, 0, 0;
 
   R_laser_ << 0.0225, 0,
-              0,      0.0225;
+    0, 0.0225;
 
   R_radar_ << 0.09, 0, 0,
     0, 0.0009, 0,
@@ -51,8 +51,8 @@ FusionEKF::FusionEKF() {
   H_laser_ << 1, 0, 0, 0,
               0, 1, 0, 0;
 
-  noise_ax_ = 9;
-  noise_ay_ = 9;
+  noise_ax_ = 10;
+  noise_ay_ = 10;
 
   ekf_.P_ <<  1, 0, 0,    0,
               0, 1, 0,    0,
