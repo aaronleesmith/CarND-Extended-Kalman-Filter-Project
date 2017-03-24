@@ -52,10 +52,10 @@ FusionEKF::FusionEKF() {
               0, 1, 0, 0;
 
   noise_ax_ = 9;
-  noise_ay_ = 9;
+  noise_ay_ = 1;
 
-  ekf_.P_ <<  1, 0, 0,    0,
-              0, 1, 0,    0,
+  ekf_.P_ <<  .5, 0, 0,    0,
+              0, .5, 0,    0,
               0, 0, 1000, 0,
               0, 0, 0,    1000;
 }
@@ -117,11 +117,18 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   //compute the time elapsed between the current and previous measurements
   double dt = CalculateDt(measurement_pack.timestamp_);
   previous_timestamp_ = measurement_pack.timestamp_;
+  bool simultaneous_measurement = false;
 
-  UpdateStateTransitionMatrix(dt);
-  UpdateProcessCovarianceMatrix(dt);
+  if (dt < 0.001) {
+    simultaneous_measurement = true;
+  }
 
-  ekf_.Predict();
+  if (!simultaneous_measurement) {
+    UpdateStateTransitionMatrix(dt);
+    UpdateProcessCovarianceMatrix(dt);
+    ekf_.Predict();
+  }
+
 
   /*****************************************************************************
    *  Update
@@ -157,7 +164,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
 double FusionEKF::CalculateDt(double new_timestamp) {
   double dt = (new_timestamp - previous_timestamp_) / 1000000.0;	//dt - expressed in seconds
-  if (dt < .001) { dt = 0.00001; }
   return dt;
 }
 
